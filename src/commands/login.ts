@@ -39,12 +39,6 @@ function startWebServer() {
       process.exit();
     }
   );
-
-  app.get("/", (req: express.Request, res: express.Response) => {
-    console.log(req.params);
-    console.log("Test");
-    res.send("ok");
-  });
   app.listen(PORT);
 }
 
