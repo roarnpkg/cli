@@ -2,17 +2,12 @@ import ts from "byots";
 import yargs from "yargs";
 import { CREDENTIALS_FILE } from "../helpers/constants";
 import fetchAPI from "../helpers/fetchAPI";
-import { load, deleteFile } from "../helpers/file";
+import { deleteFile } from "../helpers/file";
 import logger, { Severity } from "../helpers/logger";
 
 async function authenticate() {
   try {
-    const file = (await load(CREDENTIALS_FILE, true)) as string;
-    const json = JSON.parse(file);
-    const response = await fetchAPI("delete-token", "POST", {
-      uid: json.uid,
-      token: json.token,
-    });
+    const response = await fetchAPI("oauth/revoke-token", "GET");
     if (!response.deleted) {
       logger(
         "An unexpected error occurred when logging out.",
@@ -24,7 +19,10 @@ async function authenticate() {
     logger("Successfully logged out.");
 
     await deleteFile(CREDENTIALS_FILE);
-  } catch (e) {
+  } catch (e: any) {
+    if (e.message === "Not authenticated") {
+      deleteFile(CREDENTIALS_FILE);
+    }
     logger(
       "You are not loggged in. Please do `roarn login` to create your credentials.",
       Severity.error

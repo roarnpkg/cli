@@ -1,5 +1,7 @@
+import base64 from "base-64";
 import fetch from "node-fetch";
-import { CLI_TOKEN, SERVER_URL } from "./constants";
+import getAuth from "./auth";
+import { CLIENT_ID, SERVER_URL } from "./constants";
 
 export default async function fetchAPI(
   endpoint: string,
@@ -10,8 +12,12 @@ export default async function fetchAPI(
     "Content-Type": "application/json",
   };
 
-  headers.Authorization = `Bearer ${CLI_TOKEN}`;
-
+  const auth = await getAuth();
+  if (auth) {
+    headers.Authorization = `Basic ${base64.encode(
+      `${CLIENT_ID}:${auth.token}`
+    )}`;
+  }
   const payload: Record<string, any> = {
     method: method,
     headers,
@@ -29,7 +35,7 @@ export default async function fetchAPI(
     } else {
       throw new Error(responseData.error || "Error Fetching API");
     }
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e.message || "Error Fetching API");
   }
 }
