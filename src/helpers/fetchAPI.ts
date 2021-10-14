@@ -5,7 +5,7 @@ import { CLIENT_ID, SERVER_URL } from "./constants";
 
 export default async function fetchAPI(
   endpoint: string,
-  method: "GET" | "POST" | "PUT",
+  method: "GET" | "POST" | "PUT" = "GET",
   body?: Record<string, any>
 ) {
   const headers: Record<string, any> = {

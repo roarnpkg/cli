@@ -5,6 +5,10 @@ export const PACKAGE_ROOT = path.join(__dirname, "..", "..");
 
 export const APP_DIRECTORY = path.join(homedir(), ".roarn");
 
+export const RUNNING_DIRECTORY = process.cwd();
+
+export const BUILD_DIRECTORY = path.join(RUNNING_DIRECTORY, "roarn_build");
+
 export const SERVER_URL = "http://localhost:3000";
 
 export const CLIENT_ID = "3Ex890cQLo1xN1S0gR6i";

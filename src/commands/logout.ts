@@ -5,7 +5,7 @@ import fetchAPI from "../helpers/fetchAPI";
 import { deleteFile } from "../helpers/file";
 import logger, { Severity } from "../helpers/logger";
 
-async function authenticate() {
+async function logout() {
   try {
     const response = await fetchAPI("oauth/revoke-token", "GET");
     if (!response.deleted) {
@@ -33,5 +33,5 @@ async function authenticate() {
 export = ts.identity<yargs.CommandModule<{}>>({
   command: "logout",
   describe: "Logout of the registry.",
-  handler: () => authenticate(),
+  handler: () => logout(),
 });

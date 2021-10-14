@@ -1,0 +1,7 @@
+{
+  "name": "my-roarn-game",
+  "version": "1.0.0",
+  "dependencies": {
+    "roarnInitials": "1.0.0"
+  }
+}

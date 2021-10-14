@@ -1,12 +1,11 @@
 import path from "path";
 import fs from "fs-extra";
-import { APP_DIRECTORY } from "./constants";
 import base64 from "base-64";
+import { APP_DIRECTORY } from "./constants";
+import { touchDirectory } from "./directories";
 
 function getFilePath(name: string): string {
-  if (!fs.existsSync(APP_DIRECTORY)) {
-    fs.mkdirSync(APP_DIRECTORY);
-  }
+  touchDirectory(APP_DIRECTORY);
 
   return path.join(APP_DIRECTORY, name);
 }

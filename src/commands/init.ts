@@ -3,6 +3,7 @@ import fs from "fs-extra";
 import shell from "shelljs";
 import prompts from "prompts";
 import yargs from "yargs";
+import { PACKAGE_ROOT } from "../helpers/constants";
 import logger, { Severity } from "../helpers/logger";
 
 interface InitOptions {
@@ -33,15 +34,19 @@ const questions = [
   },
 ];
 
-async function insertGame() {
-  try {
-    await fs.copy("./templates/rojo", "./");
-  } catch (err) {
-    logger(err.message, Severity.error, true);
+async function insert(type: string) {
+  if (type === "game") {
+    try {
+      await fs.copy(`${PACKAGE_ROOT}/templates/game`, "./");
+    } catch (err: any) {
+      logger(err.message, Severity.error, true);
+    }
   }
 }
 
 async function init(argv: yargs.Arguments<InitOptions>) {
+  console.log(process.cwd());
+  console.log(__dirname);
   try {
     const {
       git = argv.git ?? argv.yes ?? false,
@@ -56,19 +61,16 @@ async function init(argv: yargs.Arguments<InitOptions>) {
         inactive: "no",
       },
     ]);
-
     const answers = await prompts(questions);
     console.log(answers);
-
     if (!answers.checkIfSure || !answers.template) {
       logger("Cancelled prompt.", Severity.error, true);
     }
     if (git) {
       shell.exec("git init");
     }
-
     if (answers.template[0] === "game") {
-      await insertGame();
+      await insert("game");
       logger("Successfully installed!");
     }
     if (answers.template[0] === "package") {
@@ -79,9 +81,8 @@ async function init(argv: yargs.Arguments<InitOptions>) {
       // await insertRojo();
       logger("Successfully installed!");
     }
-
     console.log(answers);
-  } catch (err) {
+  } catch (err: any) {
     logger(err.message, Severity.error, true);
   }
 }
