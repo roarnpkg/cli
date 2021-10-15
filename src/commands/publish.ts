@@ -10,8 +10,11 @@ import logger, { Severity } from "../helpers/logger";
 import { archiveDir } from "../helpers/archive";
 import getAuth from "../helpers/auth";
 import fetchAPI from "../helpers/fetchAPI";
+import { signIn, signOut, upload } from "../firebase";
+import { loadFile } from "../helpers/file";
 
 async function publish() {
+  touchDirectory(BUILD_DIRECTORY);
   try {
     const authenticated = await getAuth();
 
@@ -26,25 +29,41 @@ async function publish() {
     }
 
     const roarnJson = require(path.join(RUNNING_DIRECTORY, "roarn.json"));
-    const { available } = await fetchAPI(
-      `packages/available/${roarnJson.name}`
+
+    logger("Verifying Package...", Severity.warning);
+    const { token, id } = await fetchAPI(
+      "packages/start-upload/",
+      "POST",
+      roarnJson
     );
 
-    if (!available) {
-      throw new Error(`Package "${roarnJson.name}" is not available`);
-    }
-
-    touchDirectory(BUILD_DIRECTORY);
+    logger("Enveloping...", Severity.warning);
     const destinationDir = path.join(BUILD_DIRECTORY, roarnJson.name);
     await fs.copy(sourceDir, destinationDir);
     await archiveDir(destinationDir);
 
-    // TODO: UPLOAD NEW PACKAGE TO THE REGISTRY
+    logger("Uploading...", Severity.warning);
+    await signIn(token);
+    const zipFile = await loadFile(`${destinationDir}.zip`);
 
-    fs.rmSync(BUILD_DIRECTORY, { recursive: true });
+    await upload(
+      `packages/${roarnJson.name}/${roarnJson.version}.zip`,
+      zipFile
+    );
+
+    await fetchAPI("packages/confirm-upload/", "POST", {
+      name: roarnJson.name,
+      version: roarnJson.version,
+      id,
+    });
+    await signOut();
+    logger("Package successfully published!", Severity.success);
   } catch (e: any) {
     logger(e.message, Severity.error);
   }
+
+  fs.rmSync(BUILD_DIRECTORY, { recursive: true });
+  process.exit();
 }
 
 export = ts.identity<yargs.CommandModule<{}>>({

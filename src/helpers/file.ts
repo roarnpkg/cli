@@ -25,27 +25,29 @@ export function save(name: string, content: string, encode?: boolean) {
   });
 }
 
-export function load(name: string, encode?: boolean) {
-  const filePath = getFilePath(name);
-
+export function loadFile(name: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    fs.readFile(filePath, function (err, data) {
+    fs.readFile(name, function (err, data) {
       if (err) {
         reject(err);
       }
-
-      if (encode) {
-        if (data === undefined) {
-          resolve(data);
-          return;
-        }
-        const encodedData = base64.decode(data.toString());
-        resolve(encodedData);
-      }
-
       resolve(data);
     });
   });
+}
+
+export async function load(name: string, encode?: boolean) {
+  const filePath = getFilePath(name);
+  const data = await loadFile(filePath);
+  if (encode) {
+    if (data === undefined) {
+      return data;
+    }
+    const encodedData = base64.decode(data.toString());
+    return encodedData;
+  }
+
+  return data;
 }
 
 export function deleteFile(name: string) {
