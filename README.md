@@ -1,5 +1,5 @@
 <p align="center">
-![](assets/20211017_225831_Frame_594.png)
+![](assets/banner.png)
 </p>
 <hr>
 <p align="center">
