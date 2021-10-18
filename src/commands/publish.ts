@@ -12,8 +12,17 @@ import getAuth from "../helpers/auth";
 import fetchAPI from "../helpers/fetchAPI";
 import { signIn, signOut, upload } from "../firebase";
 import { loadFile } from "../helpers/file";
+import loadRoarnJson from "../helpers/loadRoarnJson";
+import { bumpVersion } from "../helpers/bumpVersion";
 
-async function publish() {
+interface ArgsOptions {
+  bump?: boolean;
+}
+
+async function publish(argv: yargs.Arguments<ArgsOptions>) {
+  if (argv.bump) {
+    await bumpVersion();
+  }
   touchDirectory(BUILD_DIRECTORY);
   try {
     const authenticated = await getAuth();
@@ -28,21 +37,21 @@ async function publish() {
       throw new Error("There is not a 'src' folder on this project.");
     }
 
-    const roarnJson = require(path.join(RUNNING_DIRECTORY, "roarn.json"));
+    const roarnJson = loadRoarnJson();
 
-    logger("Verifying Package...", Severity.warning);
+    logger(`Verifying Package...`, Severity.warning);
+
     const { token, id } = await fetchAPI(
       "packages/start-upload/",
       "POST",
       roarnJson
     );
-
-    logger("Enveloping...", Severity.warning);
+    logger(`Enveloping...`, Severity.warning);
     const destinationDir = path.join(BUILD_DIRECTORY, roarnJson.name);
     await fs.copy(sourceDir, destinationDir);
     await archiveDir(destinationDir);
 
-    logger("Uploading...", Severity.warning);
+    logger(`Uploading...`, Severity.warning);
     await signIn(token);
     const zipFile = await loadFile(`${destinationDir}.zip`);
 
@@ -69,5 +78,11 @@ async function publish() {
 export = ts.identity<yargs.CommandModule<{}>>({
   command: "publish",
   describe: "Publish a module to the registry.",
-  handler: () => publish(),
+  handler: (argv) => publish(argv),
+  builder: () =>
+    yargs.option("bump", {
+      alias: "b",
+      boolean: true,
+      describe: "Bump package version when publishing.",
+    }),
 });

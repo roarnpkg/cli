@@ -25,6 +25,16 @@ export function save(name: string, content: string, encode?: boolean) {
   });
 }
 
+export function saveFile(name: string, content: string): Promise<Boolean> {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(name, content, function (err) {
+      if (err) {
+        reject(err);
+      }
+      resolve(true);
+    });
+  });
+}
 export function loadFile(name: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     fs.readFile(name, function (err, data) {

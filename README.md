@@ -1,10 +1,9 @@
 <p align="center">
-    <img alt="Roarn Banner" src="./assets/banner.png">
+![](assets/20211017_225831_Frame_594.png)
 </p>
-
+<hr>
 <p align="center">
 A Roblox Package Manager
 </p>
----
-
-Coming Soon!
+<hr>
+### Coming Soon!

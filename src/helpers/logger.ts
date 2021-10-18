@@ -5,18 +5,21 @@ export enum Severity {
   success = "success",
   warning = "warning",
   error = "error",
+  neutral = "neutral",
 }
 
 const LOGGERS = {
   success: chalk.green.bold,
   warning: chalk.yellow.bold,
   error: chalk.red.bold,
+  neutral: chalk.white,
 };
 
 const BOX_COLORS = {
   success: "green",
   warning: "yellow",
   error: "red",
+  neutral: "white",
 };
 
 export default function logger(
