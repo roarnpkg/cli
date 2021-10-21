@@ -1,16 +1,16 @@
 import ts from "byots";
 import path from "path";
 import fs from "fs-extra";
-// import shell from "shelljs";
-// import prompts from "prompts";
 import yargs from "yargs";
+import { encode } from "base-64";
+
 import { BUILD_DIRECTORY, RUNNING_DIRECTORY } from "../helpers/constants";
 import { touchDirectory } from "../helpers/directories";
 import logger, { Severity } from "../helpers/logger";
 import { archiveDir } from "../helpers/archive";
+import { signIn, signOut, upload } from "../firebase";
 import getAuth from "../helpers/auth";
 import fetchAPI from "../helpers/fetchAPI";
-import { signIn, signOut, upload } from "../firebase";
 import { loadFile } from "../helpers/file";
 import loadRoarnJson from "../helpers/loadRoarnJson";
 import { bumpVersion } from "../helpers/bumpVersion";
@@ -39,13 +39,21 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
 
     const roarnJson = loadRoarnJson();
 
+    let readMe = "";
+
+    const readmePath = path.join(RUNNING_DIRECTORY, "README.md");
+
+    if (fs.existsSync(readmePath)) {
+      readMe = encode((await loadFile(readmePath)).toString());
+    }
+
     logger(`Verifying Package...`, Severity.warning);
 
-    const { token, id } = await fetchAPI(
-      "packages/start-upload/",
-      "POST",
-      roarnJson
-    );
+    const { token, id } = await fetchAPI("packages/start-upload/", "POST", {
+      ...roarnJson,
+      readMe,
+    });
+
     logger(`Enveloping...`, Severity.warning);
     const destinationDir = path.join(BUILD_DIRECTORY, roarnJson.name);
     await fs.copy(sourceDir, destinationDir);
