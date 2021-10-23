@@ -31,7 +31,7 @@ If you have any questions on how Roarn works, please reply on this post! I'll be
 
 If you have more concerns or need help with Roarn we have community servers!
 
-[![1024-gold 1|40x40](./assets/guilded.png) Guilded](https://guilded.gg/roarn) | [![1024-gold 2|40x40](./assets/discord.png) Discord](https://discord.gg/C3xquja35X)
+[![1024-gold 1|40x40](./assets/guilded.png)](https://guilded.gg/roarn) | [![1024-gold 2|40x40](./assets/discord.png)](https://discord.gg/C3xquja35X)
 
 </div>
 
