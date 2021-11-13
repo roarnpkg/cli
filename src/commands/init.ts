@@ -1,105 +1,81 @@
 import ts from "byots";
 import fs from "fs-extra";
-import shell from "shelljs";
 import prompts from "prompts";
 import yargs from "yargs";
-import { PACKAGE_ROOT } from "../helpers/constants";
+import { PACKAGE_ROOT, RUNNING_DIRECTORY } from "../helpers/constants";
 import logger, { Severity } from "../helpers/logger";
-
-interface InitOptions {
-  yes?: boolean;
-  git?: boolean;
-}
+import { RoarnJson } from "../helpers/loadRoarnJson";
+import path from "path";
+import { saveFile } from "../helpers/file";
+import rojoProject from "../helpers/rojoProject";
 
 const questions = [
   {
-    type: "toggle",
-    name: "checkIfSure",
-    message:
-      "The following prompts will setup Rojo and Roarn. Would you like to continue?",
-    active: "yes",
-    inactive: "no",
+    type: "text",
+    name: "packageName",
+    message: `Package Name: (${path.basename(RUNNING_DIRECTORY)})`,
   },
   {
-    type: "multiselect",
-    name: "template",
-    message: "What template would you like to use?",
-    min: 1,
-    max: 1,
-    choices: [
-      { title: "game", value: "game" },
-      { title: "package", value: "package" },
-      { title: "plugin", value: "plugin" },
-    ],
+    type: "text",
+    name: "packageVersion",
+    message: "Version: (1.0.0)",
+  },
+  {
+    type: "text",
+    name: "packageDescription",
+    message: "Description: (none)",
   },
 ];
 
-async function insert(type: string) {
-  if (type === "game") {
-    try {
-      await fs.copy(`${PACKAGE_ROOT}/templates/game`, "./");
-    } catch (err: any) {
-      logger(err.message, Severity.error, true);
-    }
-  }
-}
-
-async function init(argv: yargs.Arguments<InitOptions>) {
-  console.log(process.cwd());
-  console.log(__dirname);
+async function insert(roarnJson: RoarnJson) {
   try {
-    const {
-      git = argv.git ?? argv.yes ?? false,
-    }: {
-      git: boolean;
-    } = await prompts([
-      {
-        type: "toggle",
-        name: "useGit",
-        message: "Would you like to setup Git with Roarn?",
-        active: "yes",
-        inactive: "no",
-      },
-    ]);
-    const answers = await prompts(questions);
-    console.log(answers);
-    if (!answers.checkIfSure || !answers.template) {
-      logger("Cancelled prompt.", Severity.error, true);
-    }
-    if (git) {
-      shell.exec("git init");
-    }
-    if (answers.template[0] === "game") {
-      await insert("game");
-      logger("Successfully installed!");
-    }
-    if (answers.template[0] === "package") {
-      // await insertRojo();
-      logger("Successfully installed!");
-    }
-    if (answers.template[0] === "plugin") {
-      // await insertRojo();
-      logger("Successfully installed!");
-    }
-    console.log(answers);
+    await fs.copy(
+      `${PACKAGE_ROOT}/templates/game`,
+      `./${
+        roarnJson.name === path.basename(RUNNING_DIRECTORY)
+          ? ""
+          : roarnJson.name
+      }/`
+    );
+    saveFile(
+      `./${
+        roarnJson.name === path.basename(RUNNING_DIRECTORY)
+          ? ""
+          : roarnJson.name
+      }/roarn.json`,
+      JSON.stringify(roarnJson, null, "\t")
+    );
+    saveFile(
+      `./${
+        roarnJson.name === path.basename(RUNNING_DIRECTORY)
+          ? ""
+          : roarnJson.name
+      }/default.project.json`,
+      JSON.stringify({ name: roarnJson.name, ...rojoProject }, null, "\t")
+    );
   } catch (err: any) {
     logger(err.message, Severity.error, true);
   }
 }
 
-export = ts.identity<yargs.CommandModule<{}, InitOptions>>({
+async function init() {
+  try {
+    const answers = await prompts(questions);
+    const RoarnJson = {
+      name: answers.packageName || path.basename(RUNNING_DIRECTORY),
+      version: answers.packageVersion || "1.0.0",
+      description: answers.packageDescription,
+      dependencies: {},
+    };
+    await insert(RoarnJson);
+    logger("Successfully installed!");
+  } catch (err: any) {
+    logger(err.message, Severity.error, true);
+  }
+}
+
+export = ts.identity<yargs.CommandModule>({
   command: "init",
   describe: "Create a project from a template",
-  builder: () =>
-    yargs
-      .option("yes", {
-        alias: "y",
-        boolean: true,
-        describe: "recommended options",
-      })
-      .option("git", {
-        boolean: true,
-        describe: "Configure Git",
-      }),
-  handler: (argv) => init(argv),
+  handler: () => init(),
 });

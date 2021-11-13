@@ -3,12 +3,17 @@
 import yargs from "yargs";
 import { PACKAGE_ROOT } from "./helpers/constants";
 import loadRoarnJson, { depsToArray } from "./helpers/loadRoarnJson";
+import logger, { Severity } from "./helpers/logger";
 import { install } from "./helpers/packages";
 
 function installPackages() {
-  const { dependencies } = loadRoarnJson();
+  try {
+    const { dependencies } = loadRoarnJson();
 
-  install(depsToArray(dependencies));
+    install(depsToArray(dependencies));
+  } catch (e: any) {
+    logger(e.message, Severity.error);
+  }
 }
 
 yargs

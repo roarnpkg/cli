@@ -11,8 +11,9 @@ import loadRoarnJson, {
 } from "../helpers/loadRoarnJson";
 import logger, { Severity } from "./logger";
 import { saveFile } from "./file";
+import { updateEzImport } from "./ezimport";
 
-type DownloadedPackage = {
+export type DownloadedPackage = {
   name: string;
   version: string;
   url?: string;
@@ -109,6 +110,8 @@ export async function install(
     await saveRoarnJSON(roarnJson);
     logger(`${installed} new package(s) installed.`);
   }
+
+  await updateEzImport();
 }
 
 export function uninstall(packages: Package[]) {

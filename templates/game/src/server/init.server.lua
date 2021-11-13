@@ -1,3 +1,1 @@
-local roarnInitials = require(game.ReplicatedStorage.roarn_modules.roarnInitials)
-
-roarnInitials.launch()
+print("Welcome to Roarn! Type roarn --help to learn our commands 🎉")
