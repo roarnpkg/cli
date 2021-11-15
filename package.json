@@ -1,6 +1,6 @@
 {
   "name": "roarn",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Use Roarn tools on Node.js",
   "main": "./lib/index.js",
   "scripts": {
