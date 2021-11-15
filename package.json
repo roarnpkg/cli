@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env ROARN_ENV=development && tsc -b -w",
     "build": "tsc -b",
-    "ship": "cross-env ROARN_ENV=production && yarn build && npm version patch && npm publish && git push"
+    "ship": "cross-env ROARN_ENV=production && yarn build && npm version patch && git push"
   },
   "bin": {
     "roarn": "./lib/cli.js"
