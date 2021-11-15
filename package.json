@@ -1,13 +1,13 @@
 {
   "name": "roarn",
-  "version": "1.0.7",
+  "version": "1.0.6",
   "description": "Use Roarn tools on Node.js",
   "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env ROARN_ENV=development && tsc -b -w",
     "build": "tsc -b",
-    "ship": "cross-env ROARN_ENV=production && yarn build && npm version patch && npm publish --access public && git push"
+    "ship": "cross-env ROARN_ENV=production && yarn build && npm version patch && npm publish && git push"
   },
   "bin": {
     "roarn": "./lib/cli.js"
