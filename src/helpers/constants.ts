@@ -11,7 +11,15 @@ export const BUILD_DIRECTORY = path.join(RUNNING_DIRECTORY, "roarn_build");
 
 export const MODULES_DIRECTORY = path.join(RUNNING_DIRECTORY, "roarn_modules");
 
-export const SERVER_URL = "http://localhost:3000";
+const SERVER_URLS = {
+  development: "http://localhost:3000",
+  production: "https://roarn.space",
+};
+
+const ENV = (process.env.ROARN_ENV ||
+  "development") as keyof typeof SERVER_URLS;
+
+export const SERVER_URL = SERVER_URLS[ENV];
 
 export const CLIENT_ID = "3Ex890cQLo1xN1S0gR6i";
 

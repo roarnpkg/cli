@@ -9,7 +9,6 @@ import { install } from "./helpers/packages";
 function installPackages() {
   try {
     const { dependencies } = loadRoarnJson();
-
     install(depsToArray(dependencies));
   } catch (e: any) {
     logger(e.message, Severity.error);

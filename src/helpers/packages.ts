@@ -11,7 +11,6 @@ import loadRoarnJson, {
 } from "../helpers/loadRoarnJson";
 import logger, { Severity } from "./logger";
 import { saveFile } from "./file";
-import { updateEzImport } from "./ezimport";
 
 export type DownloadedPackage = {
   name: string;
@@ -102,7 +101,9 @@ export async function install(
     bumpInstalledFunction?.();
     if (p.dependencies) {
       const subPkgs = depsToArray(p.dependencies);
-      await install(subPkgs, level + 1, bumpInstalledFunction);
+      if (subPkgs.length) {
+        await install(subPkgs, level + 1, bumpInstalledFunction);
+      }
     }
   }
 
@@ -110,8 +111,6 @@ export async function install(
     await saveRoarnJSON(roarnJson);
     logger(`${installed} new package(s) installed.`);
   }
-
-  await updateEzImport();
 }
 
 export function uninstall(packages: Package[]) {

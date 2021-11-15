@@ -8,6 +8,7 @@ import { RoarnJson } from "../helpers/loadRoarnJson";
 import path from "path";
 import { saveFile } from "../helpers/file";
 import rojoProject from "../helpers/rojoProject";
+import { updateEzImport } from "../helpers/ezimport";
 
 const questions = [
   {
@@ -53,6 +54,7 @@ async function insert(roarnJson: RoarnJson) {
       }/default.project.json`,
       JSON.stringify({ name: roarnJson.name, ...rojoProject }, null, "\t")
     );
+    await updateEzImport();
   } catch (err: any) {
     logger(err.message, Severity.error, true);
   }
