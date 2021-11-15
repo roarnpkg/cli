@@ -16,8 +16,7 @@ const SERVER_URLS = {
   production: "https://roarn.space",
 };
 
-const ENV = (process.env.ROARN_ENV ||
-  "development") as keyof typeof SERVER_URLS;
+const ENV = (process.env.ROARN_ENV || "production") as keyof typeof SERVER_URLS;
 
 export const SERVER_URL = SERVER_URLS[ENV];
 

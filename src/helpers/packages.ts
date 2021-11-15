@@ -43,6 +43,7 @@ export async function install(
     logger("No package(s)", Severity.error);
     return;
   }
+
   const roarnJson = loadRoarnJson();
 
   const filteredPackages = packages.filter((p) => {
