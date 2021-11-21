@@ -1,8 +1,10 @@
+import { config as dotEnvConfig } from "dotenv";
 import { homedir } from "os";
 import path from "path";
 
-export const PACKAGE_ROOT = path.join(__dirname, "..", "..");
+dotEnvConfig();
 
+export const PACKAGE_ROOT = path.join(__dirname, "..", "..");
 export const APP_DIRECTORY = path.join(homedir(), ".roarn");
 
 export const RUNNING_DIRECTORY = process.cwd();

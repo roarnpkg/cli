@@ -1,7 +1,7 @@
 import path from "path";
 import { RUNNING_DIRECTORY } from "./constants";
 import { saveFile } from "./file";
-import fs from "fs-extra";
+import { existsSync } from "fs-extra";
 
 export const JSON_PATH = path.join(RUNNING_DIRECTORY, "roarn.json");
 
@@ -29,7 +29,7 @@ export function depsToArray(dependencies: Record<string, string>) {
 }
 
 export default function loadRoarnJson() {
-  if (!fs.existsSync(JSON_PATH)) {
+  if (!existsSync(JSON_PATH)) {
     throw new Error(
       "Cannot find a roarn.json file. To init a project do 'roarn init'"
     );

@@ -1,7 +1,9 @@
 import ts from "byots";
-import fs from "fs-extra";
+import { copy } from "fs-extra";
 import prompts from "prompts";
 import yargs from "yargs";
+import camelize from "camelize";
+
 import { PACKAGE_ROOT, RUNNING_DIRECTORY } from "../helpers/constants";
 import logger, { Severity } from "../helpers/logger";
 import { RoarnJson } from "../helpers/loadRoarnJson";
@@ -10,11 +12,13 @@ import { saveFile } from "../helpers/file";
 import rojoProject from "../helpers/rojoProject";
 import { updateEzImport } from "../helpers/ezimport";
 
+const camelizedBasename = camelize(path.basename(RUNNING_DIRECTORY));
+
 const questions = [
   {
     type: "text",
     name: "packageName",
-    message: `Package Name: (${path.basename(RUNNING_DIRECTORY)})`,
+    message: `Package Name: (${camelizedBasename})`,
   },
   {
     type: "text",
@@ -30,27 +34,19 @@ const questions = [
 
 async function insert(roarnJson: RoarnJson) {
   try {
-    await fs.copy(
+    await copy(
       `${PACKAGE_ROOT}/templates/game`,
-      `./${
-        roarnJson.name === path.basename(RUNNING_DIRECTORY)
-          ? ""
-          : roarnJson.name
-      }/`
+      `./${roarnJson.name === camelizedBasename ? "" : roarnJson.name}/`
     );
     saveFile(
       `./${
-        roarnJson.name === path.basename(RUNNING_DIRECTORY)
-          ? ""
-          : roarnJson.name
+        roarnJson.name === camelizedBasename ? "" : roarnJson.name
       }/roarn.json`,
       JSON.stringify(roarnJson, null, "\t")
     );
     saveFile(
       `./${
-        roarnJson.name === path.basename(RUNNING_DIRECTORY)
-          ? ""
-          : roarnJson.name
+        roarnJson.name === camelizedBasename ? "" : roarnJson.name
       }/default.project.json`,
       JSON.stringify({ name: roarnJson.name, ...rojoProject }, null, "\t")
     );
@@ -64,7 +60,7 @@ async function init() {
   try {
     const answers = await prompts(questions);
     const RoarnJson = {
-      name: answers.packageName || path.basename(RUNNING_DIRECTORY),
+      name: answers.packageName || camelizedBasename,
       version: answers.packageVersion || "1.0.0",
       description: answers.packageDescription,
       dependencies: {},

@@ -1,5 +1,5 @@
 import path from "path";
-import fs from "fs-extra";
+import { readFile, unlink, writeFile } from "fs-extra";
 import base64 from "base-64";
 import { APP_DIRECTORY } from "./constants";
 import { touchDirectory } from "./directories";
@@ -16,7 +16,7 @@ export function save(name: string, content: string, encode?: boolean) {
   const encodedData = base64.encode(content);
 
   return new Promise((resolve, reject) => {
-    fs.writeFile(filePath, encode ? encodedData : content, function (err) {
+    writeFile(filePath, encode ? encodedData : content, function (err) {
       if (err) {
         reject(err);
       }
@@ -27,7 +27,7 @@ export function save(name: string, content: string, encode?: boolean) {
 
 export function saveFile(name: string, content: string): Promise<Boolean> {
   return new Promise((resolve, reject) => {
-    fs.writeFile(name, content, function (err) {
+    writeFile(name, content, function (err) {
       if (err) {
         reject(err);
       }
@@ -37,7 +37,7 @@ export function saveFile(name: string, content: string): Promise<Boolean> {
 }
 export function loadFile(name: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    fs.readFile(name, function (err, data) {
+    readFile(name, function (err, data) {
       if (err) {
         reject(err);
       }
@@ -64,7 +64,7 @@ export function deleteFile(name: string) {
   const filePath = getFilePath(name);
 
   return new Promise((resolve, reject) => {
-    fs.unlink(filePath, function (err) {
+    unlink(filePath, function (err) {
       if (err) {
         reject(err);
       }

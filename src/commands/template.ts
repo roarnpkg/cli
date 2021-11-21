@@ -1,5 +1,5 @@
 import ts from "byots";
-import fs from "fs-extra";
+import { copy } from "fs-extra";
 import shell from "shelljs";
 import prompts from "prompts";
 import yargs from "yargs";
@@ -37,7 +37,7 @@ const questions = [
 async function insert(type: string) {
   if (type === "game") {
     try {
-      await fs.copy(`${PACKAGE_ROOT}/templates/game`, "./");
+      await copy(`${PACKAGE_ROOT}/templates/game`, "./");
     } catch (err: any) {
       logger(err.message, Severity.error, true);
     }

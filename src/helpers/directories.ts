@@ -1,7 +1,14 @@
-import fs from "fs-extra";
+import { existsSync, mkdirSync } from "fs-extra";
+import path from "path";
 
-export function touchDirectory(path: string) {
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
-  }
+export function touchDirectory(dir: string) {
+  const subDirs = dir.split(path.sep);
+  let last = "";
+  subDirs.forEach((s) => {
+    const current = last + s + path.sep;
+    if (!existsSync(current)) {
+      mkdirSync(current);
+    }
+    last = current;
+  });
 }

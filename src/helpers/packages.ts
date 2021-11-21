@@ -1,4 +1,4 @@
-import fs from "fs-extra";
+import { existsSync, rmSync, unlinkSync } from "fs-extra";
 import fetchAPI from "../helpers/fetchAPI";
 import Downloader from "nodejs-file-downloader";
 import { MODULES_DIRECTORY } from "../helpers/constants";
@@ -23,7 +23,7 @@ function shouldInstall(p: Package) {
   const packageDir = `${MODULES_DIRECTORY}/${p.name}`;
   const jsonFile = `${packageDir}/roarn.json`;
 
-  if (fs.existsSync(jsonFile)) {
+  if (existsSync(jsonFile)) {
     if (!p.version) {
       return false;
     }
@@ -82,7 +82,7 @@ export async function install(
     );
     touchDirectory(packageDir);
 
-    fs.rmSync(packageDir, { recursive: true });
+    rmSync(packageDir, { recursive: true });
     const downloader = new Downloader({
       url: p.url,
       directory: packageDir,
@@ -90,7 +90,7 @@ export async function install(
     await downloader.download();
     const zipfile = `${packageDir}/${p.version}.zip`;
     await unarchiveZip(zipfile);
-    fs.unlinkSync(zipfile);
+    unlinkSync(zipfile);
 
     delete p.url;
 
@@ -128,7 +128,7 @@ export function uninstall(packages: Package[]) {
 
     touchDirectory(packageDir);
     logger(`Removing ${p.name}...`, Severity.neutral);
-    fs.rmSync(packageDir, { recursive: true });
+    rmSync(packageDir, { recursive: true });
   });
 
   saveRoarnJSON(roarnJson);

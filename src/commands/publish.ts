@@ -1,6 +1,6 @@
 import ts from "byots";
 import path from "path";
-import fs from "fs-extra";
+import { copy, existsSync, rmSync } from "fs-extra";
 import yargs from "yargs";
 import { encode } from "base-64";
 
@@ -33,7 +33,7 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
 
     const sourceDir = path.join(RUNNING_DIRECTORY, "src");
 
-    if (!fs.existsSync(sourceDir)) {
+    if (!existsSync(sourceDir)) {
       throw new Error("There is not a 'src' folder on this project.");
     }
 
@@ -43,7 +43,7 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
 
     const readmePath = path.join(RUNNING_DIRECTORY, "README.md");
 
-    if (fs.existsSync(readmePath)) {
+    if (existsSync(readmePath)) {
       readMe = encode((await loadFile(readmePath)).toString());
     }
 
@@ -56,7 +56,7 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
 
     logger(`Enveloping...`, Severity.warning);
     const destinationDir = path.join(BUILD_DIRECTORY, roarnJson.name);
-    await fs.copy(sourceDir, destinationDir);
+    await copy(sourceDir, destinationDir);
     await archiveDir(destinationDir);
 
     logger(`Uploading...`, Severity.warning);
@@ -79,7 +79,7 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
     logger(e.message, Severity.error);
   }
 
-  fs.rmSync(BUILD_DIRECTORY, { recursive: true });
+  rmSync(BUILD_DIRECTORY, { recursive: true });
   process.exit();
 }
 
