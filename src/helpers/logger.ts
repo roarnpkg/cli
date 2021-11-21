@@ -26,7 +26,10 @@ export default function logger(
   severity: Severity = Severity.success,
   box?: boolean
 ) {
-  const log = `${LOGGERS[severity](severity)} - ${message}`;
+  const log =
+    severity === "neutral"
+      ? `- ${message}`
+      : `${LOGGERS[severity](severity)} - ${message}`;
 
   if (box) {
     console.log(
