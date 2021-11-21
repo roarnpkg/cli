@@ -9,12 +9,11 @@ export enum Severity {
 }
 
 const LOGGERS = {
-  success: chalk.green.bold,
-  warning: chalk.yellow.bold,
-  error: chalk.red.bold,
+  success: chalk.green.underline,
+  warning: chalk.yellow.underline,
+  error: chalk.red.underline,
   neutral: chalk.white,
 };
-
 const BOX_COLORS = {
   success: "green",
   warning: "yellow",
@@ -27,7 +26,8 @@ export default function logger(
   severity: Severity = Severity.success,
   box?: boolean
 ) {
-  const log = LOGGERS[severity](message);
+  const log = `${LOGGERS[severity](severity)} - ${message}`;
+
   if (box) {
     console.log(
       boxen(log, {
