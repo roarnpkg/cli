@@ -47,6 +47,7 @@
     "zip-lib": "^0.7.2"
   },
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/base-64": "^1.0.0",
     "@types/cli-interact": "^0.1.0",
     "@types/express": "^4.17.13",

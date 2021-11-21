@@ -10,7 +10,8 @@ import { RoarnJson } from "../helpers/loadRoarnJson";
 import path from "path";
 import { saveFile } from "../helpers/file";
 import rojoProject from "../helpers/rojoProject";
-import { updateEzImport } from "../helpers/ezimport";
+import { install } from "../helpers/packages";
+import chalk from "chalk";
 
 const camelizedBasename = camelize(path.basename(RUNNING_DIRECTORY));
 
@@ -38,19 +39,19 @@ async function insert(roarnJson: RoarnJson) {
       `${PACKAGE_ROOT}/templates/game`,
       `./${roarnJson.name === camelizedBasename ? "" : roarnJson.name}/`
     );
-    saveFile(
+    await saveFile(
       `./${
         roarnJson.name === camelizedBasename ? "" : roarnJson.name
       }/roarn.json`,
       JSON.stringify(roarnJson, null, "\t")
     );
-    saveFile(
+    await saveFile(
       `./${
         roarnJson.name === camelizedBasename ? "" : roarnJson.name
       }/default.project.json`,
       JSON.stringify({ name: roarnJson.name, ...rojoProject }, null, "\t")
     );
-    await updateEzImport();
+    await install([{ name: "Roarn" }]);
   } catch (err: any) {
     logger(err.message, Severity.error, true);
   }
@@ -66,7 +67,13 @@ async function init() {
       dependencies: {},
     };
     await insert(RoarnJson);
-    logger("Successfully installed!");
+    logger("Successfully initialized!");
+    logger(
+      `Access ${chalk.blue(
+        "https://docs.roarn.space"
+      )} to learn more on how to install packages and use Roarn in it's full potential.\n\n`,
+      Severity.neutral
+    );
   } catch (err: any) {
     logger(err.message, Severity.error, true);
   }

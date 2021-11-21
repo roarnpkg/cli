@@ -11,6 +11,7 @@ import loadRoarnJson, {
 } from "../helpers/loadRoarnJson";
 import logger, { Severity } from "./logger";
 import { saveFile } from "./file";
+import path from "path";
 
 export type DownloadedPackage = {
   name: string;
@@ -20,8 +21,9 @@ export type DownloadedPackage = {
 };
 
 function shouldInstall(p: Package) {
-  const packageDir = `${MODULES_DIRECTORY}/${p.name}`;
-  const jsonFile = `${packageDir}/roarn.json`;
+  const packageDir = path.join(MODULES_DIRECTORY, p.name);
+
+  const jsonFile = path.join(packageDir, "roarn.json");
 
   if (existsSync(jsonFile)) {
     if (!p.version) {
@@ -70,9 +72,9 @@ export async function install(
 
   for (let i = 0; i < packageData.length; i++) {
     const p = packageData[i];
-    const packageDir = `${MODULES_DIRECTORY}/${p.name}`;
+    const packageDir = path.join(MODULES_DIRECTORY, p.name);
 
-    const jsonFile = `${packageDir}/roarn.json`;
+    const jsonFile = path.join(packageDir, "roarn.json");
 
     logger(
       `${Array.from(Array(level).keys())
@@ -88,7 +90,7 @@ export async function install(
       directory: packageDir,
     });
     await downloader.download();
-    const zipfile = `${packageDir}/${p.version}.zip`;
+    const zipfile = path.join(packageDir, `${p.version}.zip`);
     await unarchiveZip(zipfile);
     unlinkSync(zipfile);
 
