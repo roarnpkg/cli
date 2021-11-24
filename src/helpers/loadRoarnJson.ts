@@ -9,6 +9,7 @@ export type RoarnJson = {
   name: string;
   version: string;
   description?: string;
+  path?: string;
   dependencies: Record<string, string>;
 };
 

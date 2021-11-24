@@ -31,13 +31,19 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
       throw new Error("You are not authenticated");
     }
 
-    const sourceDir = path.join(RUNNING_DIRECTORY, "src");
+    const roarnJson = loadRoarnJson();
 
-    if (!existsSync(sourceDir)) {
-      throw new Error("There is not a 'src' folder on this project.");
+    let sourceDir = path.join(RUNNING_DIRECTORY, "src");
+
+    if (roarnJson.path) {
+      sourceDir = path.join(RUNNING_DIRECTORY, roarnJson.path);
     }
 
-    const roarnJson = loadRoarnJson();
+    if (!existsSync(sourceDir)) {
+      throw new Error(
+        "There is not a 'src' folder or the provided 'path' is not on this project."
+      );
+    }
 
     let readMe = "";
 
