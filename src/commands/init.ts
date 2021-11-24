@@ -51,7 +51,7 @@ async function insert(roarnJson: RoarnJson) {
       }/default.project.json`,
       JSON.stringify({ name: roarnJson.name, ...rojoProject }, null, "\t")
     );
-    await install([{ name: "Roarn" }]);
+    await install([{ name: "roarn_tools" }]);
   } catch (err: any) {
     logger(err.message, Severity.error, true);
   }
