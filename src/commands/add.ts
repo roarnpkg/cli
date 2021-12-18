@@ -3,9 +3,11 @@ import yargs from "yargs";
 
 import logger, { Severity } from "../helpers/logger";
 import { install } from "../helpers/packages";
+import checkVersion from "../helpers/versionCheck";
 
 async function add(argv: yargs.Arguments<{}>) {
   try {
+    await checkVersion();
     argv._.shift();
     const packages = argv._ as string[];
 

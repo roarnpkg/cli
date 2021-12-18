@@ -14,12 +14,14 @@ import fetchAPI from "../helpers/fetchAPI";
 import { loadFile } from "../helpers/file";
 import loadRoarnJson from "../helpers/loadRoarnJson";
 import { bumpVersion } from "../helpers/bumpVersion";
+import checkVersion from "../helpers/versionCheck";
 
 interface ArgsOptions {
   bump?: boolean;
 }
 
 async function publish(argv: yargs.Arguments<ArgsOptions>) {
+  await checkVersion();
   if (argv.bump) {
     await bumpVersion();
   }
@@ -50,7 +52,9 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
     const readmePath = path.join(RUNNING_DIRECTORY, "README.md");
 
     if (existsSync(readmePath)) {
-      readMe = encode((await loadFile(readmePath)).toString());
+      readMe = encode(
+        encodeURIComponent((await loadFile(readmePath)).toString())
+      );
     }
 
     logger(`Verifying Package...`, Severity.warning);
