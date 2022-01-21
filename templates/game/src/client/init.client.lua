@@ -1,1 +1,1 @@
-print("Welcome to Roarn! Type roarn --help to learn our commands 🎉")
+print("Welcome to Bonfire! Type fire --help to learn our commands 🎉")

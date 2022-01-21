@@ -4,11 +4,11 @@ import Downloader from "nodejs-file-downloader";
 import { MODULES_DIRECTORY } from "../helpers/constants";
 import { unarchiveZip } from "../helpers/archive";
 import { touchDirectory } from "../helpers/directories";
-import loadRoarnJson, {
+import loadFireJson, {
   depsToArray,
   Package,
-  saveRoarnJSON,
-} from "../helpers/loadRoarnJson";
+  saveFireJson,
+} from "./loadFireJson";
 import logger, { Severity } from "./logger";
 import { saveFile } from "./file";
 import path from "path";
@@ -23,14 +23,14 @@ export type DownloadedPackage = {
 function shouldInstall(p: Package) {
   const packageDir = path.join(MODULES_DIRECTORY, p.name);
 
-  const jsonFile = path.join(packageDir, "roarn.json");
+  const jsonFile = path.join(packageDir, "fire.json");
 
   if (existsSync(jsonFile)) {
     if (!p.version) {
       return false;
     }
-    const pRoarnJson = require(jsonFile);
-    return pRoarnJson.version !== p.version;
+    const pFireJson = require(jsonFile);
+    return pFireJson.version !== p.version;
   }
 
   return true;
@@ -46,10 +46,10 @@ export async function install(
     return;
   }
 
-  const roarnJson = loadRoarnJson();
+  const fireJson = loadFireJson();
 
   const filteredPackages = packages.filter((p) => {
-    if (!level && !roarnJson.dependencies[p.name]) {
+    if (!level && !fireJson.dependencies[p.name]) {
       return true;
     }
     return shouldInstall(p);
@@ -74,7 +74,7 @@ export async function install(
     const p = packageData[i];
     const packageDir = path.join(MODULES_DIRECTORY, p.name);
 
-    const jsonFile = path.join(packageDir, "roarn.json");
+    const jsonFile = path.join(packageDir, "fire.json");
 
     logger(
       `${Array.from(Array(level).keys())
@@ -99,7 +99,7 @@ export async function install(
     await saveFile(jsonFile, JSON.stringify(p, null, "\t"));
 
     if (!level) {
-      roarnJson.dependencies[p.name] = p.version;
+      fireJson.dependencies[p.name] = p.version;
     }
     bumpInstalledFunction?.();
     if (p.dependencies) {
@@ -111,7 +111,7 @@ export async function install(
   }
 
   if (!level) {
-    await saveRoarnJSON(roarnJson);
+    await saveFireJson(fireJson);
     logger(`${installed} new package(s) installed.`);
   }
 }
@@ -122,10 +122,10 @@ export function uninstall(packages: Package[]) {
     return;
   }
 
-  const roarnJson = loadRoarnJson();
+  const fireJson = loadFireJson();
 
   packages.forEach((p) => {
-    delete roarnJson.dependencies[p.name];
+    delete fireJson.dependencies[p.name];
     const packageDir = `${MODULES_DIRECTORY}/${p.name}`;
 
     touchDirectory(packageDir);
@@ -133,6 +133,6 @@ export function uninstall(packages: Package[]) {
     rmSync(packageDir, { recursive: true });
   });
 
-  saveRoarnJSON(roarnJson);
+  saveFireJson(fireJson);
   logger("All packages have been removed!");
 }

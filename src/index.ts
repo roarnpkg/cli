@@ -1,1 +1,1 @@
-export const ROARN_VERSION = "ALPHA";
+export const FIRECLI_VERSION = "ALPHA";

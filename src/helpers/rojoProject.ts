@@ -7,8 +7,8 @@ export default {
       Modules: {
         $path: "src/shared",
       },
-      roarn_modules: {
-        $path: "roarn_modules",
+      fire_modules: {
+        $path: "fire_modules",
       },
     },
 

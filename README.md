@@ -1,37 +1,45 @@
-[![Frame 594|690x215](./assets/banner.png)](https://roarn.space)
+# WARNING THIS IS NOT COMPLETE
 
-<div align="center">
+Roarn will soon become Bonfire! 🥳
 
-[[🔗Website/Dashboard]](https://roarn.space) | [[📘Documentation]](https://docs.roarn.space) | [[📁 Source Code]](https://github.com/roarnpkg/roarn)
-
-Roarn is a simple package manager. It easily manages packages and their dependencies creating a easier and user friendly environment.
+But there are still some preparations. Please note this branch is NOT done yet.
 
 <hr />
 
-**Why Roarn?**
+[![Frame 594|690x215](./assets/banner.png)](https://bonfire.pm)
 
-Using a tool like Roarn will boost your productivity on your Rojo Workspace. Roarn will manage all community made modules for you making your workspace cleaner and more efficient. Its all as simple as doing `roarn add roact`
+<div align="center">
 
-When searching for packages in Roarn it will give quick results on your search in seconds. In return it gives you the best packages to help your development.
+[[🔗Website/Dashboard]](https://bonfire.pm) | [[📘Documentation]](https://docs.bonfire.pm) | [[📁 Source Code]](https://github.com/bonfirepkg/cli)
+
+Bonfire is a simple package manager. It easily manages packages and their dependencies creating a easier and user friendly environment.
+
+<hr />
+
+**Why Bonfire?**
+
+Using a tool like Bonfire will boost your productivity on your Rojo Workspace. Bonfire will manage all community made modules for you making your workspace cleaner and more efficient. Its all as simple as doing `fire add roact`
+
+When searching for packages in Bonfire it will give quick results on your search in seconds. In return it gives you the best packages to help your development.
 
 <hr />
 
 **Installation**
 
-To install Roarn you will need Node.js. After that you can simply run the following to install:
-`npm install roarn --global`
+To install Bonfire you will need Node.js. After that you can simply run the following to install:
+`npm install bonfire --global`
 
-If you still have issues on installing Roarn check out our [documentation](https://docs.roarn.space).
+If you still have issues on installing Bonfire check out our [documentation](https://docs.bonfire.pm).
 
 <hr />
 
 **Questions?**
 
-If you have any questions on how Roarn works, please reply on this post! I'll be answering all questions here.
+If you have any questions on how Bonfire works, please reply on this post! I'll be answering all questions here.
 
-If you have more concerns or need help with Roarn we have community servers!
+If you have more concerns or need help with Bonfire we have community servers!
 
-[![1024-gold 1|40x40](./assets/guilded.png)](https://guilded.gg/roarn) | [![1024-gold 2|40x40](./assets/discord.png)](https://discord.gg/C3xquja35X)
+[![1024-gold 1|40x40](./assets/guilded.png)](https://guilded.gg/bonfire) | [![1024-gold 2|40x40](./assets/discord.png)](https://discord.gg/C3xquja35X)
 
 </div>
 

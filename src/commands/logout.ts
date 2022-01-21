@@ -24,7 +24,7 @@ async function logout() {
       deleteFile(CREDENTIALS_FILE);
     }
     logger(
-      "You are not loggged in. Please do `roarn login` to create your credentials.",
+      "You are not loggged in. Please do `fire login` to create your credentials.",
       Severity.error
     );
   }

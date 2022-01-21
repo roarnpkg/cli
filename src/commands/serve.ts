@@ -1,4 +1,4 @@
-// Little helper if you keep using Roarn, and want to run your server ;)
+// Little helper if you keep using Bonfire, and want to run your server ;)
 
 import ts from "byots";
 import yargs from "yargs";

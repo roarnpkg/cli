@@ -16,7 +16,7 @@ const questions = [
     type: "toggle",
     name: "checkIfSure",
     message:
-      "The following prompts will setup Rojo and Roarn. Would you like to continue?",
+      "The following prompts will setup Rojo and Bonfire. Would you like to continue?",
     active: "yes",
     inactive: "no",
   },
@@ -54,7 +54,7 @@ async function template(argv: yargs.Arguments<InitOptions>) {
       {
         type: "toggle",
         name: "useGit",
-        message: "Would you like to setup Git with Roarn?",
+        message: "Would you like to setup Git with Bonfire?",
         active: "yes",
         inactive: "no",
       },

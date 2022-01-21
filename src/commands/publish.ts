@@ -12,7 +12,7 @@ import { signIn, signOut, upload } from "../firebase";
 import getAuth from "../helpers/auth";
 import fetchAPI from "../helpers/fetchAPI";
 import { loadFile } from "../helpers/file";
-import loadRoarnJson from "../helpers/loadRoarnJson";
+import loadFireJson from "../helpers/loadFireJson";
 import { bumpVersion } from "../helpers/bumpVersion";
 import checkVersion from "../helpers/versionCheck";
 
@@ -33,12 +33,12 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
       throw new Error("You are not authenticated");
     }
 
-    const roarnJson = loadRoarnJson();
+    const fireJson = loadFireJson();
 
     let sourceDir = path.join(RUNNING_DIRECTORY, "src");
 
-    if (roarnJson.path) {
-      sourceDir = path.join(RUNNING_DIRECTORY, roarnJson.path);
+    if (fireJson.path) {
+      sourceDir = path.join(RUNNING_DIRECTORY, fireJson.path);
     }
 
     if (!existsSync(sourceDir)) {
@@ -60,12 +60,12 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
     logger(`Verifying Package...`, Severity.warning);
 
     const { token, id } = await fetchAPI("packages/start-upload/", "POST", {
-      ...roarnJson,
+      ...fireJson,
       readMe,
     });
 
     logger(`Enveloping...`, Severity.warning);
-    const destinationDir = path.join(BUILD_DIRECTORY, roarnJson.name);
+    const destinationDir = path.join(BUILD_DIRECTORY, fireJson.name);
     await copy(sourceDir, destinationDir);
     await archiveDir(destinationDir);
 
@@ -73,14 +73,11 @@ async function publish(argv: yargs.Arguments<ArgsOptions>) {
     await signIn(token);
     const zipFile = await loadFile(`${destinationDir}.zip`);
 
-    await upload(
-      `packages/${roarnJson.name}/${roarnJson.version}.zip`,
-      zipFile
-    );
+    await upload(`packages/${fireJson.name}/${fireJson.version}.zip`, zipFile);
 
     await fetchAPI("packages/confirm-upload/", "POST", {
-      name: roarnJson.name,
-      version: roarnJson.version,
+      name: fireJson.name,
+      version: fireJson.version,
       id,
     });
     await signOut();

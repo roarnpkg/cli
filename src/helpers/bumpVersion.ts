@@ -1,10 +1,10 @@
-import loadRoarnJson, { saveRoarnJSON } from "./loadRoarnJson";
+import loadFireJson, { saveFireJson } from "./loadFireJson";
 import semver from "semver";
 
 export async function bumpVersion() {
-  const roarnJson = loadRoarnJson();
+  const fireJson = loadFireJson();
 
-  roarnJson.version = semver.inc(roarnJson.version, "patch") as string;
+  fireJson.version = semver.inc(fireJson.version, "patch") as string;
 
-  await saveRoarnJSON(roarnJson);
+  await saveFireJson(fireJson);
 }

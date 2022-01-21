@@ -6,7 +6,7 @@ import camelize from "camelize";
 
 import { PACKAGE_ROOT, RUNNING_DIRECTORY } from "../helpers/constants";
 import logger, { Severity } from "../helpers/logger";
-import { RoarnJson } from "../helpers/loadRoarnJson";
+import { FireJson } from "../helpers/loadFireJson";
 import path from "path";
 import { saveFile } from "../helpers/file";
 import rojoProject from "../helpers/rojoProject";
@@ -33,25 +33,23 @@ const questions = [
   },
 ];
 
-async function insert(roarnJson: RoarnJson) {
+async function insert(fireJson: FireJson) {
   try {
     await copy(
       `${PACKAGE_ROOT}/templates/game`,
-      `./${roarnJson.name === camelizedBasename ? "" : roarnJson.name}/`
+      `./${fireJson.name === camelizedBasename ? "" : fireJson.name}/`
+    );
+    await saveFile(
+      `./${fireJson.name === camelizedBasename ? "" : fireJson.name}/fire.json`,
+      JSON.stringify(fireJson, null, "\t")
     );
     await saveFile(
       `./${
-        roarnJson.name === camelizedBasename ? "" : roarnJson.name
-      }/roarn.json`,
-      JSON.stringify(roarnJson, null, "\t")
-    );
-    await saveFile(
-      `./${
-        roarnJson.name === camelizedBasename ? "" : roarnJson.name
+        fireJson.name === camelizedBasename ? "" : fireJson.name
       }/default.project.json`,
-      JSON.stringify({ name: roarnJson.name, ...rojoProject }, null, "\t")
+      JSON.stringify({ name: fireJson.name, ...rojoProject }, null, "\t")
     );
-    await install([{ name: "roarn_tools" }]);
+    await install([{ name: "bonfire_tools" }]);
   } catch (err: any) {
     logger(err.message, Severity.error, true);
   }
@@ -60,18 +58,18 @@ async function insert(roarnJson: RoarnJson) {
 async function init() {
   try {
     const answers = await prompts(questions);
-    const RoarnJson = {
+    const loadFireJson = {
       name: answers.packageName || camelizedBasename,
       version: answers.packageVersion || "1.0.0",
       description: answers.packageDescription,
       dependencies: {},
     };
-    await insert(RoarnJson);
+    await insert(loadFireJson);
     logger("Successfully initialized!");
     logger(
       `Access ${chalk.blue(
-        "https://docs.roarn.space"
-      )} to learn more on how to install packages and use Roarn in it's full potential.\n\n`,
+        "https://docs.bonfire.pm"
+      )} to learn more on how to install packages and use Bonfire in it's full potential.\n\n`,
       Severity.neutral
     );
   } catch (err: any) {

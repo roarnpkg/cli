@@ -57,7 +57,7 @@ async function authenticate() {
     logger(
       "You are already logged in as " +
         json.username +
-        ". Please use `roarn logout` to clear your credentials.",
+        ". Please use `fire logout` to clear your credentials.",
       Severity.error
     );
   } catch (e) {

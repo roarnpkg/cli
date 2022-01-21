@@ -3,17 +3,17 @@
 import semver from "semver";
 import yargs from "yargs";
 import { PACKAGE_ROOT } from "./helpers/constants";
-import loadRoarnJson, { depsToArray } from "./helpers/loadRoarnJson";
+import loadFireJson, { depsToArray } from "./helpers/loadFireJson";
 import logger, { Severity } from "./helpers/logger";
 import { install } from "./helpers/packages";
 
 if (!semver.gte(process.version, "15.0.0")) {
-  throw new Error("Roarn requires Node.js 15 or later");
+  throw new Error("Bonfire requires Node.js 15 or later");
 }
 
 function installPackages() {
   try {
-    const { dependencies } = loadRoarnJson();
+    const { dependencies } = loadFireJson();
     install(depsToArray(dependencies));
   } catch (e: any) {
     logger(e.message, Severity.error);
@@ -21,11 +21,11 @@ function installPackages() {
 }
 
 yargs
-  .scriptName("roarn")
+  .scriptName("fire")
   .usage("$0 <cmd> [args]")
   .command(
     "$0",
-    "Install all packages from roarn.json",
+    "Install all packages from fire.json",
     () => {},
     installPackages
   )
